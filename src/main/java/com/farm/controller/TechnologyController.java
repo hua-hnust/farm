@@ -66,8 +66,8 @@ public class TechnologyController {
      * 删除文章
      * @param id 文章id
      */
-    @DeleteMapping("/article")
-    public Boolean deleteArticle(@RequestParam Integer id){
+    @DeleteMapping("/article/{id}")
+    public Boolean deleteArticle(@PathVariable Integer id){
         Article article = articleService.getById(id);
         if (article == null){
             Exceptions.throwss("文章不存在");
