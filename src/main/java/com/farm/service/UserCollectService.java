@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.farm.dto.res.MyCollectDTO;
 import com.farm.entity.ApplyRecord;
 import com.farm.entity.UserCollect;
 import com.farm.mapper.UserCollectMapper;
@@ -42,5 +43,17 @@ public class UserCollectService extends ServiceImpl<UserCollectMapper, UserColle
         queryWrapper.eq("userId",userId).eq("status",1).orderByDesc("create_time");
         Page<UserCollect> page = new Page<>(currPage, pageSize);
         return collectMapper.selectPage(page, queryWrapper);
+    }
+
+    /**
+     *  我的收藏
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public IPage<MyCollectDTO> getMyCollect(Integer userId, Long page, Long pageSize) {
+        Page<MyCollectDTO> page1 = new Page<>(page,pageSize);
+        return collectMapper.getMyCollect(page1,userId);
     }
 }

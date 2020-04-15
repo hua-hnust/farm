@@ -12,4 +12,20 @@
         <result column="update_time" property="updateTime" />
     </resultMap>
 
+    <select id="getMyCollect" resultType="com.farm.dto.res.MyCollectDTO">
+        SELECT
+	      t1.id,
+	      t1.user_id AS userId,
+	      t1.article_id AS articleId,
+	      t1.create_time AS createTime,
+	      t2.title AS articleTitle
+        FROM
+	      user_collect t1
+	    LEFT JOIN article t2 ON t1.article_id = t2.id
+        WHERE
+	      t1.user_id = #{userId}
+	    AND t1.`status` = 1
+	    order by t1.create_time desc
+    </select>
+
 </mapper>

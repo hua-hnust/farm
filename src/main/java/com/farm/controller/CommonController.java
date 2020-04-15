@@ -12,14 +12,12 @@ import com.farm.dto.req.UpdatePasswordDTO;
 import com.farm.dto.res.ArticleDTO;
 import com.farm.dto.res.BusinessSumupDTO;
 import com.farm.dto.res.LoginInfoDTO;
+import com.farm.dto.res.MyCollectDTO;
 import com.farm.entity.Article;
 import com.farm.entity.User;
 import com.farm.entity.UserCollect;
 import com.farm.mapper.UserCollectMapper;
-import com.farm.service.ArticleService;
-import com.farm.service.AuthService;
-import com.farm.service.BusinessSumupService;
-import com.farm.service.UserService;
+import com.farm.service.*;
 import com.farm.util.Exceptions;
 import com.farm.util.FileUtil;
 import com.farm.util.MD5Util;
@@ -60,7 +58,7 @@ public class CommonController {
     private UserService userService;
 
     @Resource
-    private UserCollectMapper userCollectMapper;
+    private UserCollectService userCollectService;
 
     /**
      *  注册接口
@@ -171,7 +169,7 @@ public class CommonController {
         userCollect.setUserId(currentUser.getId());
         userCollect.setArticleId(id);
         userCollect.setStatus(DateStatus.VALID.getCode());
-        UserCollect exist = userCollectMapper.selectOne(new QueryWrapper<>(userCollect));
+        UserCollect exist = userCollectService.getOne(new QueryWrapper<>(userCollect));
         if (exist != null){
             articleDTO.setFollow(true);
         }else {
@@ -221,6 +219,18 @@ public class CommonController {
     @GetMapping("/sumup-detail")
     public BusinessSumupDTO sumupDetail(@RequestParam("id")Integer id){
         return businessSumupService.sumupDetail(id);
+    }
+
+    /**
+     *  我的收藏
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("my-collect")
+    public IPage<MyCollectDTO> getMyCollect(@RequestParam("page")Long page, @RequestParam("pageSize")Long pageSize){
+        User currentUser = Optional.ofNullable(userService.currentUser()).orElseThrow(() -> of(INVALID_TOKEN));
+        return userCollectService.getMyCollect(currentUser.getId(),page,pageSize);
     }
 
     /**
