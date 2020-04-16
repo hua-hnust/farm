@@ -26,7 +26,7 @@
           if(t3.id is null,0,1) as follow
         FROM
           article t1 LEFT JOIN `user` t2 on t1.author_id = t2.id
-        LEFT JOIN user_collect t3 on t1.id = t3.article_id and t3.user_id = #{userId} and t3.status = 1
+        LEFT JOIN user_collect t3 on t1.id = t3.article_id and t3.status = 1
         where t1.status = 1 and t1.type in (2,3,4)
           <if test="content != null and content != ''">
               and title like CONCAT('%','${content}','%' ) or content like CONCAT('%','${content}','%' )
