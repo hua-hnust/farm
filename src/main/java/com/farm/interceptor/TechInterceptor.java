@@ -29,8 +29,10 @@ public class TechInterceptor extends AbstractInterceptor {
         if (super.isOpenApi(handler)) {
             return true;
         }
-
-        return doCheck(request, response);
+        if (!doCheck(request, response)){
+            Exceptions.throwss("当前登录用户没有操作权限");
+        }
+        return true;
     }
 
     /**
@@ -52,6 +54,7 @@ public class TechInterceptor extends AbstractInterceptor {
         User query = new User();
         query.setToken(SessionContext.getRemoteSid());
         User user = userMapper.selectOne(new QueryWrapper<>(query));
-        return user.getType().equals(UserType.MANAGE.getCode());
+        //技术员或者管理员权限
+        return user.getType().equals(UserType.MANAGE.getCode()) || user.getType().equals(UserType.ADMIN.getCode());
     }
 }

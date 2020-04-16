@@ -92,9 +92,9 @@ CREATE TABLE `comment`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `operation_record`;
 CREATE TABLE `operation_record`  (
-  `id` int(11) NOT NULL,
+   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NULL DEFAULT NULL COMMENT '操作人',
-  `describe` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作描述',
+  `description` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作描述',
   `type` tinyint(4) NULL DEFAULT NULL COMMENT '操作类型 1、施肥 2、打药 ',
   `used_aomut` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用量',
   `operation_time` timestamp(0) NULL DEFAULT NULL COMMENT '操作时间',

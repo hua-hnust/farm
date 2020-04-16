@@ -94,7 +94,7 @@ public class TechnologyController {
      * @param businessSumup
      */
     @PostMapping("/sumup")
-    public void saveBusinessSumup(@RequestBody BusinessSumup businessSumup){
+    public Boolean saveBusinessSumup(@RequestBody BusinessSumup businessSumup){
         if (StringUtils.isBlank(businessSumup.getContent())){
             Exceptions.throwss(CONTENT_EMPTY);
         }
@@ -104,7 +104,7 @@ public class TechnologyController {
         }
         businessSumup.setUpdateTime(LocalDateTime.now());
         businessSumup.setStatus(DateStatus.VALID.getCode());
-        sumupService.saveOrUpdate(businessSumup);
+        return sumupService.saveOrUpdate(businessSumup);
     }
 
     /**
@@ -136,10 +136,10 @@ public class TechnologyController {
      * @param sumupId
      */
     @DeleteMapping("/sumup/{sumupId}")
-    public void deleteSumup(@PathVariable Integer sumupId){
+    public Boolean deleteSumup(@PathVariable Integer sumupId){
         BusinessSumup businessSumup = Optional.ofNullable(sumupService.getById(sumupId)).orElseThrow(() -> Errors.of(NOT_FOUND));
         businessSumup.setStatus(DateStatus.INVALID.getCode());
-        sumupService.saveOrUpdate(businessSumup);
+        return sumupService.saveOrUpdate(businessSumup);
     }
 
 

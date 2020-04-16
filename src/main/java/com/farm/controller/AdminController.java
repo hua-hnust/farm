@@ -23,11 +23,13 @@ import com.farm.util.DateTimeUtil;
 import com.farm.util.Exceptions;
 import com.farm.util.MD5Util;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -168,7 +170,7 @@ public class AdminController {
     public Boolean sumup(@RequestBody BusinessSumupParamsDTO businessSumupParamsDTO){
         BusinessSumup businessSumup = new BusinessSumup();
         BeanUtils.copyProperties(businessSumupParamsDTO,businessSumup);
-        businessSumup.setTime(DateTimeUtil.formatStringToLocalDateTime(businessSumupParamsDTO.getTime(),"yyyy-MM-dd HH:mm:ss"));
+        businessSumup.setTime(LocalDateTime.now());
         businessSumup.setAuthorId(userService.currentUser().getId());
         businessSumup.setStatus(1);
         //数据库字段策略，修改的时候不需要更新此字段

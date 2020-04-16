@@ -1,5 +1,7 @@
 package com.farm.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.*;
 
 import java.io.Serializable;
@@ -21,7 +23,7 @@ import java.time.LocalDateTime;
 public class OperationRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -32,7 +34,7 @@ public class OperationRecord implements Serializable {
     /**
      * 操作描述
      */
-    private String describe;
+    private String description;
 
     /**
      * 操作类型 1、施肥 2、打药

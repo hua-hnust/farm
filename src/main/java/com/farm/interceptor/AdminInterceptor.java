@@ -31,8 +31,10 @@ public class AdminInterceptor extends AbstractInterceptor {
         if (super.isOpenApi(handler)) {
             return true;
         }
-
-        return doCheck(request, response);
+        if (!doCheck(request, response)){
+            Exceptions.throwss("当前登录用户非管理员");
+        }
+        return true;
     }
 
     /**

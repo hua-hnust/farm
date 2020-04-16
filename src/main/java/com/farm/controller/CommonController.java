@@ -1,5 +1,6 @@
 package com.farm.controller;
 
+import com.baomidou.mybatisplus.core.assist.ISqlRunner;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
@@ -17,6 +18,7 @@ import com.farm.entity.Article;
 import com.farm.entity.User;
 import com.farm.entity.UserCollect;
 import com.farm.mapper.UserCollectMapper;
+import com.farm.mapper.UserMapper;
 import com.farm.service.*;
 import com.farm.util.Exceptions;
 import com.farm.util.FileUtil;
@@ -59,6 +61,9 @@ public class CommonController {
 
     @Resource
     private UserCollectService userCollectService;
+
+    @Resource
+    private UserMapper userMapper;
 
     /**
      *  注册接口
@@ -252,6 +257,19 @@ public class CommonController {
         }
 
         return "/static/" + fileName;
+    }
+
+    /**
+     *  检查token是否有效
+     * @param token
+     * @return
+     */
+    @RequestMapping("check-token")
+    public Boolean checkToken(@RequestParam("token")String token){
+        User query = new User();
+        query.setToken(token);
+        User user = userMapper.selectOne(new QueryWrapper<>(query));
+        return user != null;
     }
 
 }

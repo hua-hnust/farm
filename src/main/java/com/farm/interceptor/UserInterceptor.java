@@ -30,7 +30,10 @@ public class UserInterceptor extends AbstractInterceptor{
             return true;
         }
 
-        return doCheck(request, response);
+        if (!doCheck(request, response)){
+            Exceptions.throwss("当前登录用户没有操作权限");
+        }
+        return true;
     }
 
     /**
@@ -52,7 +55,7 @@ public class UserInterceptor extends AbstractInterceptor{
         User query = new User();
         query.setToken(SessionContext.getRemoteSid());
         User user = userMapper.selectOne(new QueryWrapper<>(query));
-        return user.getType().equals(UserType.GENERAL_USER.getCode());
+        return user.getType().equals(UserType.GENERAL_USER.getCode()) || user.getType().equals(UserType.ADMIN.getCode());
     }
 
 }

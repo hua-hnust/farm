@@ -3,13 +3,11 @@ package com.farm.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.farm.constants.ApplyStatus;
 import com.farm.constants.DateStatus;
 import com.farm.constants.Errors;
-import com.farm.dto.req.ApplyParamsDTO;
-import com.farm.dto.req.CommentDTO;
-import com.farm.dto.req.CommentParam;
-import com.farm.dto.req.UserPlantParams;
+import com.farm.dto.req.*;
 import com.farm.dto.res.ApplyDTO;
 import com.farm.entity.*;
 import com.farm.service.*;
@@ -59,6 +57,8 @@ public class UserController {
 
     @Autowired
     private UserPlantService userPlantService;
+    @Autowired
+    private OperationRecordService operationRecordService;
 
     @GetMapping("/get-user")
     public User getUser(@RequestParam("id") Integer id) {
@@ -314,5 +314,65 @@ public class UserController {
         return userPlantService.getPlantInfo(user.getId(),page,pageSize);
     }
 
+    /**
+     *  添加&修改施肥打药信息
+     * @param params
+     */
+    @PostMapping("/operate")
+    public Boolean saveOperateInfo(@RequestBody OperateRecordParams params){
+        User currentUser = Optional.ofNullable(userService.currentUser()).orElseThrow(() -> of(INVALID_TOKEN));
+        if (params.getId()!=null){
+            QueryWrapper queryWrapper = new QueryWrapper();
+            queryWrapper.eq("id",params.getId());
+            queryWrapper.eq("user_id",currentUser.getId());
+            OperationRecord operationRecord = operationRecordService.getOne(queryWrapper);
+            if (operationRecord == null){
+                Exceptions.throwss("操作信息不存在");
+            }
+            BeanUtils.copyProperties(params,operationRecord);
+            operationRecord.setOperationTime(params.getOperationTime());
+            return operationRecordService.updateById(operationRecord);
+        }else {
+            OperationRecord operationRecord = new OperationRecord();
+            BeanUtils.copyProperties(params,operationRecord);
+            operationRecord.setOperationTime(params.getOperationTime());
+            operationRecord.setUserId(currentUser.getId());
+            operationRecord.setUpdateTime(LocalDateTime.now());
+            return operationRecordService.saveOrUpdate(operationRecord);
+        }
+    }
+
+    /**
+     *  删除施肥打药信息
+     * @param id
+     */
+    @DeleteMapping("/operate/{id}")
+    public Boolean deleteOperationRecord(@PathVariable("id")Integer id){
+        User currentUser = Optional.ofNullable(userService.currentUser()).orElseThrow(() -> of(INVALID_TOKEN));
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("id",id);
+        queryWrapper.eq("user_id",currentUser.getId());
+        OperationRecord record = operationRecordService.getOne(queryWrapper);
+        if (record == null){
+            Exceptions.throwss("操作信息不存在");
+        }
+        return operationRecordService.removeById(id);
+    }
+
+    /**
+     *  施肥打药信息列表
+     * @param type 操作类型 1、施肥 2、打药
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/list-operate")
+    public IPage<OperationRecord> getOperationRecordList(Integer type,long page, long pageSize){
+        User user = userService.currentUser();
+        if (type == null){
+            type = 1;
+        }
+        return operationRecordService.getOperationRecordInfo(type,user.getId(),page,pageSize);
+    }
 
 }
