@@ -3,8 +3,31 @@
 
 <mapper namespace="com.farm.mapper.UserMapper">
 
+    <resultMap id="userBaseMapper" type="com.farm.entity.User">
+        <id column="id" property="id" jdbcType="INTEGER"></id>
+        <id column="name" property="name" jdbcType="VARCHAR"></id>
+        <id column="phone" property="phone" jdbcType="VARCHAR"></id>
+        <id column="card_id" property="cardId" jdbcType="VARCHAR"></id>
+        <id column="password" property="password" jdbcType="VARCHAR"></id>
+        <id column="type" property="type" jdbcType="INTEGER"></id>
+        <id column="token" property="token" jdbcType="VARCHAR"></id>
+        <id column="status" property="status" jdbcType="INTEGER"></id>
+        <id column="token_expire_time" property="tokenExpireTime" jdbcType="DATE"></id>
+        <id column="create_time" property="createTime" jdbcType="DATE"></id>
+        <id column="update_time" property="updateTime" jdbcType="DATE"></id>
+
+        <collection property="articleList" ofType="com.farm.entity.Article" column="id" select="com.farm.mapper.ArticleMapper.selectArticleByUserId">
+
+        </collection>
+    </resultMap>
+
 
     <select id="selectUserByToken" resultType="com.farm.entity.User">
         select * from user where token = #{token} and token_expire_time > now()
     </select>
+
+    <select id="getUserAndArticle" resultMap="userBaseMapper">
+        select * from user
+    </select>
+
 </mapper>

@@ -85,4 +85,8 @@
         order by t1.create_time desc
     </select>
 
+    <select id="selectArticleByUserId" resultMap="BaseResultMap">
+        select * from article where author_id = #{userId}
+    </select>
+
 </mapper>

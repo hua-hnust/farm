@@ -1,7 +1,7 @@
 {
   "outPath": "E://Code//Java//farm//src//main//resources//static//doc",
   "server": "",
-  "serverUrl": "http://124.156.99.143:8099/api",
+  "serverUrl": "http://localhost:8099/api",
   "allInOne": true,
   "projectName": "Farm Manage System"
 
