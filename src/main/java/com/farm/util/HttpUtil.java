@@ -122,7 +122,7 @@ public class HttpUtil {
                 logger.debug("Post Response[{}] : {} , null", url, requestParams);
             }
         } catch (Exception e){
-            logger.error("Send get error : " + url + " , " + requestParams, e);
+            logger.error("Send post error : " + url + " , " + requestParams, e);
         } finally {
             try {
                 httpClient.close();

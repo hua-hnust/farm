@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author xhua
@@ -31,5 +32,6 @@ public class User {
     private Date tokenExpireTime;
     private Date createTime;
     private Date updateTime;
+    private List<Article> articleList;
 
 }
